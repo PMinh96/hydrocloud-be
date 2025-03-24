@@ -18,6 +18,7 @@ export class Project {
     @Column()
     phone_number: string;
 
+    //tiền ứng
     @Column('decimal', { precision: 10, scale: 2 })
     advance: number;
 

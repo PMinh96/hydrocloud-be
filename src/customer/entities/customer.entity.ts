@@ -14,6 +14,9 @@ export class Customer {
     @Column()
     address: string;
 
+    @Column()
+    customer_type: string;
+
     @Column('uuid')
     tenant_id: string;
 
