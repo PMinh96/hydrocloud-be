@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { User } from 'src/users/entity/user.entity';
@@ -55,9 +55,49 @@ export class ProductService {
   }
 
   async findAll(req: User) {
-    const products = await this.productRepository.find({ where: { tenant_id: req.tenant_id }, select:["id", "name", "price_sale", "unit", "inventory", "tenant_id"] })
+    const products = await this.productRepository.find({ where: { tenant_id: req.tenant_id }, select: ["id", "name", "price_sale", "unit", "inventory", "tenant_id"] })
     return products
   }
+
+  async decreaseProductQuantities(items: { product_id: string; quantity: number }[]) {
+    for (const item of items) {
+      const product = await this.productRepository.findOne({
+        where: { id: item.product_id },
+      });
+
+      if (!product) {
+        throw new NotFoundException(`Product with ID ${item.product_id} not found`);
+      }
+
+      if (product.inventory < item.quantity) {
+        throw new BadRequestException(
+          `Not enough quantity for product ${product.name}. Requested: ${item.quantity}, Available: ${product.inventory}`,
+        );
+      }
+
+      product.inventory -= item.quantity;
+      await this.productRepository.save(product);
+    }
+
+    return { message: 'Product quantities updated successfully' };
+  }
+
+  async increaseProductQuantities(items: { product_id: string; quantity: number }[]) {
+  for (const item of items) {
+    const product = await this.productRepository.findOne({
+      where: { id: item.product_id },
+    });
+
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${item.product_id} not found`);
+    }
+
+    product.inventory += item.quantity;
+    await this.productRepository.save(product);
+  }
+
+  return { message: 'Product inventory restored successfully' };
+}
 
   async update(req: User, id: string, updateProductDto: UpdateProductDto): Promise<Product> {
     const product = await this.productRepository.findOneBy({ id, tenant_id: req.tenant_id });

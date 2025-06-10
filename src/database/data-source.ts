@@ -9,7 +9,7 @@ export const AppDataSource = new DataSource({
   port: parseInt(process.env.DB_PORT || '3306'),
   username: process.env.DB_USERNAME || 'root',
   password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'test',
+  database: process.env.DB_NAME || 'hydro_cloud',
   synchronize: true,
   logging: true,
   entities: entities,

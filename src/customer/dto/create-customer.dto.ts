@@ -4,4 +4,5 @@ export class CreateCustomerDto {
     address: string;
     Preferential_level: string;
     tenant_id: string;
+    customer_type: string;
 }

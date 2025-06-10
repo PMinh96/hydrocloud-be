@@ -10,9 +10,10 @@ import { WarehouseModule } from './warehouse/warehouse.module';
 import { CustomerModule } from './customer/customer.module';
 import { ProjectsModule } from './projects/projects.module';
 import { OrderModule } from './order/order.module';
+import { OrderProductModule } from './order-product/order-product.module';
 
 @Module({
-  imports: [TenantModule, MySqlModule, AuthModule, UsersModule, ProductModule, WarehouseModule, CustomerModule, ProjectsModule, OrderModule],
+  imports: [TenantModule, MySqlModule, AuthModule, UsersModule, ProductModule, WarehouseModule, CustomerModule, ProjectsModule, OrderModule, OrderProductModule],
   controllers: [AppController],
   providers: [AppService],
 })
